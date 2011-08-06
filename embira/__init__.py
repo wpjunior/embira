@@ -20,6 +20,8 @@ VERSION = (0, 1 , 0)
 
 __author__ = 'Wilson Júnior'
 
+from embira.events import EventHandler, signal
+
 def get_version():
     version = '%s.%s' % (VERSION[0], VERSION[1])
     if VERSION[2]:
