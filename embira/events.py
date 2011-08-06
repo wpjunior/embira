@@ -1,3 +1,20 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Copyright (C) 2011 Wilson Pinto Júnior <wilsonpjunior@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class EventNotFound(Exception): pass
 
@@ -18,7 +35,7 @@ class EventHandlerType(type):
             if not pre_signals.has_key(v.name):
                 pre_signals[v.name] = []
 
-            pre_signals[v.name].append(v.func)
+            pre_signals[v.name].append(v.func.__name__)
             attrs[k] = v.func
 
         attrs['_pre_signals'] = pre_signals
@@ -30,6 +47,12 @@ class EventHandler(object):
 
     def __init__(self):
         self._listeners = {}
+
+        if self.__class__._pre_signals:
+            for name, sigs in self.__class__._pre_signals.iteritems():
+                for sig in sigs:
+                    self.on(name,
+                            getattr(self, sig))
 
     def on(self, name, func=None):
         """

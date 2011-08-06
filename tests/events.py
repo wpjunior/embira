@@ -99,9 +99,13 @@ class EventTest(unittest.TestCase):
 
     def test_class_event(self):
         class MyEvents(EventHandler):
-            @signal('wilson')
+            @signal('testing')
             def teste(*args):
                 pass
 
-        self.assertEqual(len(MyEvents._pre_signals), 1)
+        self.assertEqual(MyEvents._pre_signals,
+                         {'testing': ['teste']})
         ev = MyEvents()
+
+        self.assertEqual(ev._listeners,
+                         {'testing': [ev.teste]})
